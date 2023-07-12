@@ -73,7 +73,7 @@ visionMarker(data) {
 }
 
 WebSocketChannel webSocketChannel(ip) {
-  return IOWebSocketChannel.connect(Uri.parse('ws://$ip'));
+  return IOWebSocketChannel.connect(Uri.parse('ws://$ip/ws'));
 }
 
 class _MyHomePageState extends State<MyHomePage> {
