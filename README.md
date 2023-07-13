@@ -1,6 +1,7 @@
 # robotrafficlight
 
-A new Flutter project.
+A flutter apk which connect to server with websocket.
+And shows roboamster vision marker.
 
 ## Getting Started
 
