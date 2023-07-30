@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -80,10 +81,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final ipController = TextEditingController();
   final padNumController = TextEditingController();
   late WebSocketChannel? channel;
+  late String ip = '';
+  late int padNum = 0;
+
+  late SharedPreferences _prefs;
+
   // 웹 서버에 접속 시도
   @override
   void initState() {
     super.initState();
+    _loadPrefs();
     try {
       channel = webSocketChannel(ipController.text);
     } catch (e) {
@@ -93,6 +100,19 @@ class _MyHomePageState extends State<MyHomePage> {
         print(e);
       }
     }
+  }
+
+  _loadPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      ip = (_prefs.getString('ip') ?? 'None');
+      padNum = (_prefs.getInt('padNum') ?? 0);
+      ipController.text = ip;
+      padNumController.text = padNum.toString();
+
+      print(ip);
+      print(padNum);
+    });
   }
 
   @override
@@ -160,9 +180,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: const Text('Connect'),
                           onPressed: () {
                             final ip = ipController.text;
+                            final padNum = int.parse(padNumController.text);
                             final url = 'ws://$ip'; // 입력된 IP 주소로 WebSocket 연결
+
+                            _prefs.setString('ip', ip);
+                            _prefs.setInt('padNum', padNum);
+                            print(ip);
+                            print(padNum);
                             final newChannel =
                                 WebSocketChannel.connect(Uri.parse(url));
+
                             setState(
                               () {
                                 try {
@@ -247,6 +274,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case AppLifecycleState.detached:
         channel!.sink.close();
         break;
+      case AppLifecycleState.hidden:
+      // TODO: Handle this case.
     }
   }
 }
