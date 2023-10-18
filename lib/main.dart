@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:robotrafficlight/screens/local_screen.dart';
 import 'package:robotrafficlight/screens/traffic_light_screen.dart';
 import 'package:robotrafficlight/shared/menu_bottom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
 void main() {
